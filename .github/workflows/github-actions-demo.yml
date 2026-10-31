@@ -1,18 +1,85 @@
 
-name: Github Actions demo
+name: MediBook - Pipeline CI/CD
 
-run-name: ${{ github.actor }} esta ejecutando un pipeline
+run-name: MediBook pipeline ejecutado por ${{ github.actor }}
 
-on: [push]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
 
 jobs:
-  Saludar-Hello-World:
+  pipeline-medibook:
+    name: Estrategia CI/CD MediBook
     runs-on: ubuntu-latest
+
     steps:
-      - run: echo "Este job ha sido ejecutado ${{ github.event_name }}"
-      - run: echo "El nombre de la rama es ${{ github.ref }}. Y el repositorio es ${{ github.repository }}"
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Listar los archivos del repositorio
+      - name: Obtener repositorio
+        uses: actions/checkout@v4
+
+      - name: Identificar evento y rama
         run: |
-          ls ${{ github.workspace }}
+          echo "Proyecto: MediBook"
+          echo "Evento: ${{ github.event_name }}"
+          echo "Rama: ${{ github.ref }}"
+          echo "Repositorio: ${{ github.repository }}"
+
+      - name: Validar infraestructura como codigo
+        run: |
+          echo "Validar archivos Terraform"
+          echo "Comandos previstos: terraform fmt, init y validate"
+          echo "Revisar configuracion de VPC, ALB, EC2 y RDS"
+          echo "Simular terraform plan para detectar cambios"
+
+      - name: Validar seguridad
+        run: |
+          echo "Revisar permisos IAM de minimo privilegio"
+          echo "Validar autenticacion mediante Amazon Cognito"
+          echo "Revisar reglas de AWS WAF"
+          echo "Verificar cifrado con KMS y uso de Secrets Manager"
+          echo "Comprobar que no existan credenciales en el codigo"
+
+      - name: Ejecutar pruebas del sistema
+        run: |
+          echo "Simular pruebas de la API de MediBook"
+          echo "Verificar que no existan reservas duplicadas"
+          echo "Comprobar autorizacion por usuario y establecimiento"
+          echo "Simular pruebas de salud y disponibilidad"
+          echo "Verificar conexion prevista con PostgreSQL"
+
+      - name: Preparar frontend y backend
+        run: |
+          echo "Preparar frontend web para AWS Amplify Hosting"
+          echo "Preparar backend y API para Amazon EC2"
+          echo "Verificar configuracion del Application Load Balancer"
+          echo "Preparar version anterior para posible rollback"
+
+      - name: Desplegar en ambiente de pruebas
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: |
+          echo "Simular despliegue en ambiente de pruebas"
+          echo "Aplicar cambios Terraform en entorno de pruebas"
+          echo "Publicar frontend en Amplify de pruebas"
+          echo "Actualizar backend EC2 de pruebas"
+          echo "Verificar funcionamiento de la API y reservas"
+
+      - name: Desplegar en produccion
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "Simular despliegue controlado en produccion"
+          echo "Revisar terraform plan antes de aplicar cambios"
+          echo "Publicar frontend mediante AWS Amplify"
+          echo "Actualizar backend EC2 con Auto Scaling"
+          echo "Verificar salud de instancias mediante ALB"
+          echo "Mantener version anterior para rollback"
+
+      - name: Monitoreo y recuperacion
+        if: github.event_name == 'push'
+        run: |
+          echo "Simular monitoreo con Amazon CloudWatch"
+          echo "Revisar errores HTTP 5xx y latencia de la API"
+          echo "Verificar salud de instancias EC2 y RDS Multi-AZ"
+          echo "Configurar alertas tecnicas mediante Amazon SNS"
+          echo "Ante fallas, planificar rollback a version anterior"
+          echo "Finalizacion de la estrategia CI/CD MediBook"
