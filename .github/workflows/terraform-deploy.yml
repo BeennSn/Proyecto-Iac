@@ -22,6 +22,18 @@ jobs:
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
+      - name: Diagnosticar identidad OIDC
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Repositorio: $GITHUB_REPOSITORY"
+          echo "Rama: $GITHUB_REF"
+          echo "Entorno: dev"
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /repos/$GITHUB_REPOSITORY/actions/oidc/customization/sub \
+            || true
+
       - name: Configurar credenciales AWS con OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -38,8 +50,9 @@ jobs:
         run: |
           terraform init \
             -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" \
-            -backend-config="key=medibook/dev/terraform.tfstate" \
-            -backend-config="region=${{ vars.AWS_REGION }}"
+            -backend-config="key=lab09/dev/terraform.tfstate" \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="use_lockfile=true"
 
       - name: Validar Terraform
         run: terraform validate
