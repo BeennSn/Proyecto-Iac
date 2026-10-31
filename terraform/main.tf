@@ -6,7 +6,7 @@ data "archive_file" "lambda_zip" {
 }
 
 resource "aws_iam_role" "lambda_role" {
-  name = "${var.project_name}-${var.environment}-lambda-role"
+  name = "lab09-medibook-lambda-execution"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
