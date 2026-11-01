@@ -1,13 +1,19 @@
 
 name: MediBook - Terraform Apply
 
+
 on:
+  push:
+    branches:
+      - development
+
   workflow_dispatch:
     inputs:
       confirmacion:
         description: 'Escribe APPLY para confirmar el despliegue'
         required: true
         type: string
+
 
 permissions:
   contents: read
@@ -20,7 +26,11 @@ concurrency:
 jobs:
   terraform-apply:
     name: Desplegar MediBook en AWS
-    if: inputs.confirmacion == 'APPLY'
+    
+    if: >-
+      (github.event_name == 'push' && github.ref == 'refs/heads/development') ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/development' && inputs.confirmacion == 'APPLY')
+
     runs-on: ubuntu-latest
     environment: dev
 
